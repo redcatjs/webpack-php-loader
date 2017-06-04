@@ -1,7 +1,7 @@
 /*
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Jo <jo@redcat.ninja> https://github.com/surikat/
-	based on https://www.npmjs.com/package/php-loader by Tobias Koppers @sokra
+	inspired by https://www.npmjs.com/package/php-loader by Tobias Koppers @sokra
 */
 
 const glob = require('glob');
@@ -22,10 +22,9 @@ module.exports = function(content){
 	// So if the file is runned "inline", we need to change path into that path so that
 	// __DIR__ point to the correct location.
 	let cwd = this.context;
+	
+	let query = ( typeof this.query === 'string'  ? loaderUtils.parseQuery(this.query || '?') : this.query ) || {};
 
-	let query = loaderUtils.parseQuery(this.query || '?');
-
-	let callback = this.async();
 	let options = Object.assign({
 		proxyScript: null
 	}, query);
@@ -44,23 +43,27 @@ module.exports = function(content){
 	this.addDependency(resource);
 	args.push(resource);
 	
-	console.log('php '+shellescape(args));
+	let callback = this.async();
+	let value;
 	async function runPhp() {
-		const {stdout, stderr} = await exec('php '+shellescape(args));
+		//console.log('php '+shellescape(args));
+		let {stdout, stderr} = await exec('php '+shellescape(args));
 		//console.log('stdout:', stdout);
 		//console.log('stderr:', stderr);
 		
-		if (stdout && stderr) {
-			if(stderr){
-				self.emitError(stderr);
-				callback(stderr);
-			}
-			else{
-				callback(null, stdout);
-			}
+		stdout = 'module.exports = `'+stdout+'`;';
+		
+		if(stderr){
+			self.emitError(stderr);
+			callback(stderr);
+		}
+		else{
+			callback(null, stdout);
 		}
 		
 	}
 	runPhp();
 
 };
+
+module.exports.raw = true;
