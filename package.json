@@ -1,6 +1,6 @@
 {
   "name": "webpack-php-loader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Jo <jo@redcat.ninja>",
   "description": "php loader module for webpack",
   "keywords": [
