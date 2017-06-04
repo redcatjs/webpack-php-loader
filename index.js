@@ -44,12 +44,17 @@ module.exports = function(content){
 	args.push(resource);
 	
 	let callback = this.async();
-	let value;
+	let debug = options.debug;
+	let cmd = 'php '+shellescape(args);
 	async function runPhp() {
-		//console.log('php '+shellescape(args));
-		let {stdout, stderr} = await exec('php '+shellescape(args));
-		//console.log('stdout:', stdout);
-		//console.log('stderr:', stderr);
+		if(debug){
+			console.log(cmd);
+		}
+		let {stdout, stderr} = await exec(cmd);
+		if(debug){
+			console.log('stdout:', stdout);
+			console.log('stderr:', stderr);
+		}
 		
 		stdout = 'module.exports = `'+stdout+'`;';
 		
