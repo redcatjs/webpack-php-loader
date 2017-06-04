@@ -56,8 +56,6 @@ module.exports = function(content){
 			console.log('stderr:', stderr);
 		}
 		
-		stdout = 'module.exports = `'+stdout+'`;';
-		
 		if(stderr){
 			self.emitError(stderr);
 			callback(stderr);
