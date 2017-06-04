@@ -1,0 +1,20 @@
+{
+  "name": "webpack-php-loader",
+  "version": "0.1.0",
+  "author": "Jo <jo@redcat.ninja>",
+  "description": "php loader module for webpack",
+  "keywords": [
+    "webpack",
+    "php",
+    "loader"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:redcatjs/webpack-php-loader.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "glob": "^7.0.5",
+    "loader-utils": "latest"
+  }
+}
