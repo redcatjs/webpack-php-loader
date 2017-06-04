@@ -6,7 +6,7 @@ Ex:
 
 ## Installation
 
-`npm install php-loader`
+`npm install webpack-php-loader`
 
 ## Usage
 
@@ -75,3 +75,5 @@ In this case, the command to be executed by php-loader to get the file 'resource
 ## License
 
 MIT (http://www.opensource.org/licenses/mit-license.php)
+
+based on https://github.com/jehon/php-loader
