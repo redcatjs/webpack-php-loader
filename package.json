@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "glob": "^7.0.5",
-    "loader-utils": "latest"
+    "loader-utils": "latest",
+    "shell-escape": "^0.2.0"
   }
 }
