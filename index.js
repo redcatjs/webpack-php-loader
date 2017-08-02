@@ -36,16 +36,16 @@ module.exports = function(content){
 		args.push(options.proxy);
 	}
 
+	this.addDependency(resource);
+	args.push(resource);
+
 	if (options.args) {
 		args = args.concat(options.args);
 	}
 
-	this.addDependency(resource);
-	args.push(resource);
-	
 	let callback = this.async();
 	let debug = options.debug;
-	let cmd = 'php '+shellescape(args);
+	let cmd = `php -r 'require $argv[1]; echo PHP_EOL, json_encode(get_included_files());' ${shellescape(args)}`;
 	async function runPhp() {
 		if(debug){
 			console.log(cmd);
@@ -61,6 +61,15 @@ module.exports = function(content){
 			callback(stderr);
 		}
 		else{
+			// Split out last line which contains list of included files and add them as Webpack dependencies
+			const includedSeparator = stdout.lastIndexOf('\n');
+			const dependencies = stdout.slice(includedSeparator);
+			stdout = stdout.slice(0, includedSeparator);
+
+			JSON.parse(dependencies).forEach(function(dependency) {
+				self.addDependency(dependency)
+			});
+
 			callback(null, stdout);
 		}
 		
