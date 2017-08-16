@@ -50,29 +50,31 @@ module.exports = function(content){
 		if(debug){
 			console.log(cmd);
 		}
-		let {stdout, stderr} = await exec(cmd);
-		if(debug){
-			console.log('stdout:', stdout);
-			console.log('stderr:', stderr);
-		}
-		
-		if(stderr){
-			self.emitError(stderr);
-			callback(stderr);
-		}
-		else{
-			// Split out last line which contains list of included files and add them as Webpack dependencies
-			const includedSeparator = stdout.lastIndexOf('\n');
-			const dependencies = stdout.slice(includedSeparator);
-			stdout = stdout.slice(0, includedSeparator);
+		try{
+			let {stdout, stderr} = await exec(cmd);
+			if(debug){
+				console.log('stdout:', stdout);
+				console.log('stderr:', stderr);
+			}
 
-			JSON.parse(dependencies).forEach(function(dependency) {
-				self.addDependency(dependency)
-			});
+			if(stderr){
+				self.emitError(stderr);
+				callback(stderr);
+			}else{
+				// Split out last line which contains list of included files and add them as Webpack dependencies
+				const includedSeparator = stdout.lastIndexOf('\n');
+				const dependencies = stdout.slice(includedSeparator);
+				stdout = stdout.slice(0, includedSeparator);
 
-			callback(null, stdout);
+				JSON.parse(dependencies).forEach(function(dependency) {
+					self.addDependency(dependency)
+				});
+
+				callback(null, stdout);
+			}
+		}catch(e){
+			callback(e);
 		}
-		
 	}
 	runPhp();
 
